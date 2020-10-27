@@ -5,7 +5,7 @@ TARGET=program
 all: $(TARGET)
 
 nbody: nbody.c
-	$(CC) $(CFLAGS) $^ -o $@ -lpthread
+	$(CC) $(CFLAGS) $^ -o $@ -lpthread -lm
 
 nbody-gui: nbodygui.c
 	$(CC) $(CFLAGS) $^ -o $@ -lpthread -lSDL2 -lSDL2_gfx
