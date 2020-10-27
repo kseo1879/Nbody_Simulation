@@ -149,26 +149,26 @@ int main(int argc, char** argv) {
 
 		free(body_array);
 
-		// struct body body[5] = { {.x = 0.0, .y = 0.0, .z = 0.0, 
-		// 	.velocity_x = 0.0, .velocity_y = 0.0, .velocity_z = 0.0, .mass = 1988999999999999901909255192576.0}, 
-		// 	{.x = 150000000000.0, .y = 0.0, .z = 0.0, 
-		// 	.velocity_x = 0.0, .velocity_y = 29800.0, .velocity_z = 0.0, .mass = 5974000000000000373293056.0},
-		// 	{.x = 230000000000.0, .y = 0.0, .z = 0.0, 
-		// 	.velocity_x = 0, .velocity_y = 24100.0, .velocity_z = 0.0, .mass = 641899999999999963299840.0},
-		// 	{.x = 55000000000.0, .y = 0.0, .z = 0.0, 
-		// 	.velocity_x = 0, .velocity_y = 47900.0, .velocity_z = 0.0, .mass = 330199999999999993708544.0},
-		// 	{.x = 100000000000.0, .y = 0, .z = 0.0, 
-		// 	.velocity_x = 0.0, .velocity_y = 35000.0, .velocity_z = 0.0, .mass = 4869000000000000115343360.0} 
-		// };
+		struct body body[5] = { {.x = 0.0, .y = 0.0, .z = 0.0, 
+			.velocity_x = 0.0, .velocity_y = 0.0, .velocity_z = 0.0, .mass = 1988999999999999901909255192576.0}, 
+			{.x = 150000000000.0, .y = 0.0, .z = 0.0, 
+			.velocity_x = 0.0, .velocity_y = 29800.0, .velocity_z = 0.0, .mass = 5974000000000000373293056.0},
+			{.x = 230000000000.0, .y = 0.0, .z = 0.0, 
+			.velocity_x = 0, .velocity_y = 24100.0, .velocity_z = 0.0, .mass = 641899999999999963299840.0},
+			{.x = 55000000000.0, .y = 0.0, .z = 0.0, 
+			.velocity_x = 0, .velocity_y = 47900.0, .velocity_z = 0.0, .mass = 330199999999999993708544.0},
+			{.x = 100000000000.0, .y = 0, .z = 0.0, 
+			.velocity_x = 0.0, .velocity_y = 35000.0, .velocity_z = 0.0, .mass = 4869000000000000115343360.0} 
+		};
 
-		// position_update(body, n_body, dt);
+		position_update(body, n_body, dt);
 
-		// for(int i = 0; i < iteration; i ++) {
-		// 	step(body, n_body, dt);
-		// 	printf("Position of First body: \n");
-		// 	printf("x:%f\ty:%f\tz:%f\n", body[1].x, body[1].velocity_y, body[1].z);
-		// 	printf("Energy Constant : %f\n\n", energy(body, n_body));
-		// }
+		for(int i = 0; i < iteration; i ++) {
+			step(body, n_body, dt);
+			printf("Position of First body: \n");
+			printf("x:%f\ty:%f\tz:%f\n", body[1].x, body[1].velocity_y, body[1].z);
+			printf("Energy Constant : %f\n\n", energy(body, n_body));
+		}
 
 	} else if(0 == strcmp(argv[3], "-f")) {
 		iteration = (int)atoi(argv[1]);
