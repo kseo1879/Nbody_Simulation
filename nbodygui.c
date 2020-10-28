@@ -51,10 +51,10 @@ int main(int argc, char** argv) {
 	window = SDL_CreateWindow("SDL Template",
 		10, 10,
 		VIEW_WIDTH, VIEW_HEIGHT, SDL_WINDOW_SHOWN);
-	if(NULL == window) {
-		printf("Something Wrong?%s\n", SDL_GetError());
-		return -1;
-	}
+	// if(NULL == window) {
+	// 	printf("Something Wrong?%s\n", SDL_GetError());
+	// 	return -1;
+	// }
 	
 	/**
 	 * Create Renderer retrieves the 2D rendering context of the window

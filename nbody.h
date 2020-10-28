@@ -59,6 +59,6 @@ double energy(struct body *body_array, int n_body);
  * specified.
  * It will update the x,y,z coordinate of n bodies. 
  */
-void step(struct body *body_array, int n_body, int dt);
+void step(struct body *body_array, int n_body, double dt);
 
 #endif
