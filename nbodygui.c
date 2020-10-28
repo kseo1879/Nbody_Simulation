@@ -4,8 +4,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#define VIEW_WIDTH (320)
-#define VIEW_HEIGHT (240)
+#define VIEW_WIDTH (640)
+#define VIEW_HEIGHT (480)
 
 //THIS IS A SDL2 TEMPLATE
 
@@ -49,8 +49,12 @@ int main(int argc, char** argv) {
 	 * Should check if it returns NULL
 	 */
 	window = SDL_CreateWindow("SDL Template",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		10, 10,
 		VIEW_WIDTH, VIEW_HEIGHT, SDL_WINDOW_SHOWN);
+	if(NULL == window) {
+		printf("Something Wrong?%s\n", SDL_GetError());
+		return -1;
+	}
 	
 	/**
 	 * Create Renderer retrieves the 2D rendering context of the window

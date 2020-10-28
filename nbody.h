@@ -13,6 +13,7 @@
 #define Z_VELOCITY_MAX (10) 
 #define MASS_MAX (20) 
 #define RAND_NUMER (5.0)
+#define N_THREAD (4)
 
 /**Size of this body is 8 x 7 which 56 bytes so it might create a false sharing issue
  * When loaded to different cache line. 
@@ -29,34 +30,35 @@ struct body {
 	double velocity_y;
 	double velocity_z;
 	double mass;
-	double a;
+	double padding;
+};
+
+struct data {
+	struct body *body_array;
+	int n_body;
+	double dt;
+	int thread_index;
 };
 
 /**
  * Body random initializer
  * This will randomly generate the bodies based on the number of bodies (n_body)
- * st_index is for parallel coding when accesses by multiple threads. 
- * n_thread is the number of threads that it is executing with. 
- * This function will initualize the body with random value.
- * There is certain maximum values it can hold. It is defined as the macros above.
- * 	ex) X_MAX
  */
 void body_rand_generator(struct body *body_array, int n_body);
 
-void velocity_update(struct body *body_array, int n_body, double dt);
+void body_file_generator(struct body **body_array, int *n_body, char *file_name);
 
-void position_update(struct body *body_array, int n_body, double dt);
+void* velocity_update(void *arg);
+
+void* position_update(void *arg);
 
 double energy(struct body *body_array, int n_body);
-
-void step(struct body *body_array, int n_body, int dt);
 
 /**
  * This is the step function which will be called based on the iteration that user
  * specified.
  * It will update the x,y,z coordinate of n bodies. 
  */
-void step();
-
+void step(struct body *body_array, int n_body, int dt);
 
 #endif
