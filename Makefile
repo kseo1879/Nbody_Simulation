@@ -52,6 +52,6 @@ rand_gui:
 ## To clean the repository
 clean:
 	rm -f *.o
-	rm -f nbody_gui
+	rm -f nbody-gui
 	rm -f nbody
 	rm -f test

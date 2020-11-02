@@ -1,0 +1,6 @@
+#File_name     Single-thread       Two-Thread      Four-Thread
+solar.csv         13.336            21.177          46.132
+ 
+
+#TESEST with 50000 values
+ 
