@@ -33,8 +33,8 @@ This will test the performance of the program.
 Typing those command will automatically run something like this:
 (time ./nbody 50000 0.1 -f ./CSV/solar.csv)
 
-- HOWEVER, you can run your own test after you compile just like this"
-- ./nbody <iteration> <dt> (-b <nbody> | -f <file path>)
+- HOWEVER, you can run your own test after you compile just like this
+- ./nbody iteration dt (-b nbody | -f file path)
 
 ### 2. To test the energy value with command line argument
 
@@ -58,7 +58,7 @@ make energy_test3
 ```
 
 - HOWEVER, you can run your own test after you compile just like this"
-- ./test <iteration> <dt> (-b <nbody> | -f <file path>)
+- ./test iteration dt (-b nbody | -f file path)
 
 The test output would be something like this:
 ```bash
@@ -98,9 +98,9 @@ make rand_gui
 First one will run the solar.csv file under CSV folder. Second one will run solar2.csv file under csv folder. The last one will show the randomly generated bodies. 
 
 - HOWEVER, you can run your own test after you compile just like this"
-- ./nbody-gui <resolution_width> <resolution_height> <iteration> <dt> (-b <nbody> | -f <file path>) <scale>)
+- (./nbody-gui resolution_width resolution_height iteration dt (-b nbody | -f file path) scale)
 
-### 4. To clean the repository
+## To clean the repository
 
 Simply type this in the command line
 ```bash
