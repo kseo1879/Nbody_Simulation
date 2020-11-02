@@ -1,3 +1,10 @@
+/**
+ * This source code has a simillar behavior as nbody.c
+ * However it will print out the initial energy of the bodies and then the energy 
+ * of it after the iteration is done
+ * If it's less than the DIFF_PERCENTAGE than it will print out that the test has passed
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,6 +12,25 @@
 #include <pthread.h>
 #include "nbody.h"
 
+//0.0001 %
+//Change this percentage too see how precist the calculation is. 
+#define DIFF_PERCENTAGE (0.000001)
+
+/**
+ * Main function will first of all set up the bodies based on the user's command line input.
+ * 1. If the option is -b than it will randomly generate the bodies
+ * 	  If the option is -f it will set up the list accordingly.
+ * 2. When the initial set up is done it will call the step function
+ * 	(1). Inside the step function it will first update the velocity and then update the p
+ * 		position of the bodies.  
+ * 	
+ * SUMMARY:
+ * Main function will first set the xyz location and xyz velocity of the bodies.
+ * (based on the flag that user has specified)
+ * Then it will update the velocity (based on the magnitude between different bodies)
+ * Finally it will update the xyz position according to the velocity
+ * It will continue to do this based on the number of the iteration.
+ */
 int main(int argc, char** argv) {
 	
 	//This are the values that will store the user input value. 
@@ -29,44 +55,52 @@ int main(int argc, char** argv) {
 
 		// This will randomly generate the bodies
 		body_rand_generator(body_array, n_body);
-	
+		
+		double energy_val_prev =  energy(body_array, n_body);
+		printf("Energy Constant Before the iteration: %f\n\n",energy_val_prev);
+
+		struct data data[N_THREAD];
+		for(int i = 0; i < N_THREAD; i ++) {
+			data[i].body_array = body_array;
+			data[i].n_body = n_body;
+			data[i].dt = dt;
+			data[i].thread_index = i;
+		}
+
 		//This function will call the step function based on the number of iteration.
 		for(int i = 0; i < iteration; i ++) {
-			step(body_array, n_body, dt);
-			printf("Position of First body: \n");
-			printf("x:%f\ty:%f\tz:%f\n", body_array[0].x, body_array[0].y, body_array[0].z);
-			printf("Energy Constant : %f\n\n", energy(body_array, n_body));
+			//This step function is declaed under nbody.h
+			//and it is implemented on nbody_source.c
+			step(body_array, n_body, dt, data);
+		}
+
+		//Printing the energy val after the iteration
+		double energy_val_after = energy(body_array, n_body);
+		printf("Energy Constant After the iteration: %f\n\n", energy_val_after);
+
+		//Getting the absolute value of energy difference. 
+		double energy_difference = sqrt(pow(energy_val_after - energy_val_prev, 2));
+
+		//Also getting the absolute value of the energy after 
+		energy_val_after = sqrt(pow(energy_val_after, 2));
+
+		if(energy_difference <= energy_val_after * DIFF_PERCENTAGE) {
+			printf("Passed the test: Fluctuation was less than %f%%\n", DIFF_PERCENTAGE * 100);
+		} else {
+			printf("Energy Value Fluctuated Too much. Higher than the goal %f\n", DIFF_PERCENTAGE * 100);
 		}
 
 		free(body_array);
 
-		// struct body body[5] = { {.x = 0.0, .y = 0.0, .z = 0.0, 
-		// 	.velocity_x = 0.0, .velocity_y = 0.0, .velocity_z = 0.0, .mass = 1988999999999999901909255192576.0}, 
-		// 	{.x = 150000000000.0, .y = 0.0, .z = 0.0, 
-		// 	.velocity_x = 0.0, .velocity_y = 29800.0, .velocity_z = 0.0, .mass = 5974000000000000373293056.0},
-		// 	{.x = 230000000000.0, .y = 0.0, .z = 0.0, 
-		// 	.velocity_x = 0, .velocity_y = 24100.0, .velocity_z = 0.0, .mass = 641899999999999963299840.0},
-		// 	{.x = 55000000000.0, .y = 0.0, .z = 0.0, 
-		// 	.velocity_x = 0, .velocity_y = 47900.0, .velocity_z = 0.0, .mass = 330199999999999993708544.0},
-		// 	{.x = 100000000000.0, .y = 0, .z = 0.0, 
-		// 	.velocity_x = 0.0, .velocity_y = 35000.0, .velocity_z = 0.0, .mass = 4869000000000000115343360.0} 
-		// };
-
-		// position_update(body, n_body, dt);
-
-		// for(int i = 0; i < iteration; i ++) {
-		// 	step(body, n_body, dt);
-		// 	printf("Position of First body: \n");
-		// 	printf("x:%f\ty:%f\tz:%f\n", body[1].x, body[1].velocity_y, body[1].z);
-		// 	printf("Energy Constant : %f\n\n", energy(body, n_body));
-		// }
-
 	} else if(0 == strcmp(argv[3], "-f")) {
+
 		iteration = (int)atoi(argv[1]);
 		dt = (double)atof(argv[2]);
 		file_name = argv[4];
 		body_file_generator(&body_array, &n_body, file_name);
         printf("dt : %f\n\n", dt);
+		
+		//=== DEREFERENCE THIS LINE TO SEE THE IF INITIALIZED CORRECTLY===
 		// for(int n_line = 0; n_line < n_body; n_line++) {
 		// 	printf("%d: %lf,%lf,%lf,%lf,%lf,%lf,%lf\n", n_line,
 		// 	body_array[n_line].x, body_array[n_line].y, body_array[n_line].z,
@@ -74,11 +108,44 @@ int main(int argc, char** argv) {
 		// 	body_array[n_line].mass);
 		// }
 
+		//Checking the enrgy value before the iteration
+		double energy_val_prev =  energy(body_array, n_body);
+		printf("Energy Constant Before the iteration: %f\n\n",energy_val_prev);
+
+		struct data data[N_THREAD];
+		for(int i = 0; i < N_THREAD; i ++) {
+			data[i].body_array = body_array;
+			data[i].n_body = n_body;
+			data[i].dt = dt;
+			data[i].thread_index = i;
+		}
+
+		//Based on the number of iteration it will call step functions.
 		for(int i = 0; i < iteration; i ++) {
-			step(body_array, n_body, dt);
-			printf("Position of First body: \n");
-			printf("x:%f\ty:%f\tz:%f\n", body_array[1].x, body_array[1].y, body_array[1].z);
-			printf("Energy Constant : %f\n\n", energy(body_array, n_body));
+			//This step function is declaed under nbody.h
+			//and it is implemented on nbody_source.c
+			step(body_array, n_body, dt, data);
+			//=== DEREFERENCE THIS LINE TO SEE THE THE VALUE CHANGING===
+			// printf("Position of First body: \n");
+			// printf("x:%f\ty:%f\tz:%f\n", body_array[1].x, body_array[1].y, body_array[1].z);
+			// printf("Energy Constant : %f\n\n", energy(body_array, n_body));
+		}
+
+		//Printing the energy val after the iteration
+		double energy_val_after = energy(body_array, n_body);
+		printf("Energy Constant After the iteration: %f\n\n", energy_val_after);
+
+		//Getting the absolute value of energy difference. 
+		double energy_difference = sqrt(pow(energy_val_after - energy_val_prev, 2));
+
+		//Also getting the absolute value of the energy after 
+		energy_val_after = sqrt(pow(energy_val_after, 2));
+
+		//If the energy difference is less than the percentage than it will pass the test
+		if(energy_difference <= energy_val_after * DIFF_PERCENTAGE) {
+			printf("Passed the test: Fluctuation was less than %f%%\n", DIFF_PERCENTAGE * 100);
+		} else {
+			printf("Energy Value Fluctuated Too much. Higher than the goal %f\n\n\n", DIFF_PERCENTAGE * 100);
 		}
 
 		free(body_array);

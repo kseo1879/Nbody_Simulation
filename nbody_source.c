@@ -5,7 +5,10 @@
 #include <pthread.h>
 #include "nbody.h"
 
-
+/**
+ * Body random initializer
+ * This will randomly generate the bodies based on the number of bodies (n_body)
+ */
 void body_rand_generator(struct body *body_array, int n_body) {
 	for(int i = 0; i < n_body; i ++) {
 		body_array[i].x = (rand() % X_MAX) + ((float)rand())/((float)RAND_MAX) - 1;
@@ -18,6 +21,9 @@ void body_rand_generator(struct body *body_array, int n_body) {
 	}
 }
 
+/**
+ * This will generate the bodies based on the data that is saved on the files.
+ */
 void body_file_generator(struct body **body_array, int *n_body, char *file_name) {
 	FILE *fp = fopen(file_name, "r");
 	//Doing an error handling. 
@@ -57,6 +63,10 @@ void body_file_generator(struct body **body_array, int *n_body, char *file_name)
 	return;
 }
 
+/**
+ * This will update the velocity based on the value according to the magnitude
+ * between different bodies.
+ */
 void* velocity_update(void *arg) {
 	struct data *data = (struct data *)arg;
 	struct body *body_array = data->body_array;
@@ -107,6 +117,10 @@ void* velocity_update(void *arg) {
 	return NULL;
 }
 
+/**
+ * This will update the position of the bodies based on the value of the updated
+ * velocity. 
+ */
 void* position_update(void *arg) {
 	struct data *data = (struct data *)arg;
 	struct body *body_array = data->body_array;
@@ -130,6 +144,11 @@ void* position_update(void *arg) {
 	return NULL;
 }
 
+/**
+ * This will calculate the energy of the bodies. The value should stay the same.
+ * However there can be fluctuation of a value by a small percentage due to the 
+ * un-precisedness of the double variable. 
+ */
 double energy(struct body *body_array, int n_body) {
 	double sum = 0.0;
 	double sum_inner = 0.0;
@@ -160,16 +179,16 @@ double energy(struct body *body_array, int n_body) {
 	return sum;
 }
 
-void step(struct body *body_array, int n_body, double dt) {
+/**
+ * This is the step function which will be called based on the iteration that user
+ * specified.
+ * It will update the x,y,z coordinate of n bodies. 
+ */
+void step(struct body *body_array, int n_body, double dt, struct data *data) {
 	pthread_t threads [N_THREAD];
-	struct data data[N_THREAD];
 
 	//Performing the velocity function
 	for(int i = 0; i < N_THREAD; i++) {
-		data[i].body_array = body_array;
-		data[i].n_body = n_body;
-		data[i].dt = dt;
-		data[i].thread_index = i;
 		pthread_create(threads + i, NULL, velocity_update, data + i);
 	}
 	for(int i = 0; i < N_THREAD; i ++) {
@@ -185,4 +204,3 @@ void step(struct body *body_array, int n_body, double dt) {
 	}			
 	return;
 }
-
