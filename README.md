@@ -3,6 +3,7 @@
 This is the submittion for N-Body Simulation SOFT3410 Assignment1
 
 By: Calvin Seo
+
 SID: 480347192
 
 ## How to use
@@ -57,7 +58,7 @@ OR
 make energy_test3
 ```
 
-- HOWEVER, you can run your own test after you compile just like this"
+- HOWEVER, you can run your own test after you compile just like this
 - ./test iteration dt (-b nbody | -f file path)
 
 The test output would be something like this:
@@ -72,7 +73,9 @@ Passed the test: Fluctuation was less than 0.000100%
 ```
 First it prints out the energy constant before the iteration and one that after the iteration. It will pass the test when the difference is less than the percentage specified. 
 
-- To change this value please change the macro on nbodytest.c DIFF_PERCENTAGE value. (line 17)
+- To change this value please change the macro on nbodytest.c 
+
+DIFF_PERCENTAGE value. (line 17)
 
 ### 3. To run and see with GUI
 
