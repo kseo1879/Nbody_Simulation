@@ -98,7 +98,6 @@ int main(int argc, char** argv) {
 		dt = (double)atof(argv[2]);
 		file_name = argv[4];
 		body_file_generator(&body_array, &n_body, file_name);
-        printf("dt : %f\n\n", dt);
 		
 		//=== DEREFERENCE THIS LINE TO SEE THE IF INITIALIZED CORRECTLY===
 		// for(int n_line = 0; n_line < n_body; n_line++) {
