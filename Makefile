@@ -21,7 +21,7 @@ performance_test_file:
 	time ./nbody 50000 0.1 -f ./CSV/solar.csv
 
 performance_test_rand:
-	time ./nbody 1000 0.1 -b 1000
+	time ./nbody 1000 0.1 -b 400
 
 
 #####################################################
@@ -39,7 +39,7 @@ energy_test3:
 #####################################################
 ## From here it will test if the gui is working. 
 solar_gui:
-	./nbody-gui 800 800 500000 1000 -f ./CSV/solar.csv 1
+	./nbody-gui 800 800 500000 500 -f ./CSV/solar.csv 1
 
 solar2_gui:
 	./nbody-gui 800 800 500000 10000 -f ./CSV/solar2.csv 1
