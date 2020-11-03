@@ -116,3 +116,13 @@ To change the number of threads please look at nbody.h file.
 If you look at line 21 of the file there is a macro N_THREAD.
 
 You need to clean the repository after you change the value and rebuild it.
+
+## How I implemented the step function.
+```bash
+void step(struct body *body_array, int n_body, double dt, struct data *data);
+```
+This is the function step. 
+
+First the main function will initialize the body array based on the user defined flag. It will then pass in the necessay arguments to the function. The struct data is defined under nbody.h and it contains the necessay data that each threads needs. This structure should also be initialized form the main function.
+
+Main function will call step function based on the number of iteration that user has specified as an argument. Each time the step function is called it will first update the velocity and update the xyz position of the bodies. The reasoning behind this is in the report. 

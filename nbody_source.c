@@ -10,6 +10,7 @@
  * This will randomly generate the bodies based on the number of bodies (n_body)
  */
 void body_rand_generator(struct body *body_array, int n_body) {
+	//Generating random bodies based on the macros that is declared in nbody.h
 	for(int i = 0; i < n_body; i ++) {
 		body_array[i].x = (rand() % X_MAX) + ((float)rand())/((float)RAND_MAX) - 1;
 		body_array[i].y = (rand() % Y_MAX) + ((float)rand())/((float)RAND_MAX) - 1;
@@ -32,19 +33,23 @@ void body_file_generator(struct body **body_array, int *n_body, char *file_name)
 		fclose(fp);
 		return;
 	}
-
+	//It will read and check how many bodies it has to dynamically allocate the memory
 	char line[2048];
 	int n_line = 0;
 	while(fgets(line, 2048, fp)) {
 		n_line ++;
 	}
+	//Put the file pointer back to it's initial position
 	rewind(fp);
+
+	//Error State
 	if(0 == n_line) {
 		perror("There is nothing in the file");
 		fclose(fp);
 		return;
 	}
 
+	//Now dynamically allocate the memory and initiaze the body structure accoding to the file.
 	*body_array = (struct body *)malloc(sizeof(struct body) * n_line);
 	n_line = 0;
 
@@ -74,6 +79,7 @@ void* velocity_update(void *arg) {
 	double dt = data->dt;
 	int thread_index = data->thread_index;
 
+	//This will identify the starting index and ending index of the body array it need to update the velocity
 	int st_index = thread_index * (n_body / N_THREAD);
 	int end_index = 0;
 	if(N_THREAD == (thread_index+1)) {
@@ -90,6 +96,7 @@ void* velocity_update(void *arg) {
 	double a_sumz = 0;
 	double massj;
 	double distance = 0;
+	//Each thread will calculate the velocity of the bodies accoding to the index of the thread
 	for(i = st_index; i < end_index; i ++) {
 		a_sumx = 0.0;
 		a_sumy = 0.0;
@@ -97,6 +104,7 @@ void* velocity_update(void *arg) {
 		xi = body_array[i].x;
 		yi = body_array[i].y;
 		zi = body_array[i].z;
+		//Get the sum of the acceleration
 		for(j = 0; j < n_body; j ++) {
 			if(i != j) {
 				xj = body_array[j].x;
@@ -109,6 +117,7 @@ void* velocity_update(void *arg) {
 				a_sumz += ((zj - zi) * GCONST * massj)/ pow(distance, 3);
 			}
 		}
+		//Adding the velocity based on the sum value we got from the inner loop.
 		body_array[i].velocity_x = body_array[i].velocity_x + (a_sumx * dt);
 		body_array[i].velocity_y = body_array[i].velocity_y + (a_sumy * dt);
 		body_array[i].velocity_z = body_array[i].velocity_z + (a_sumz * dt);
@@ -128,6 +137,7 @@ void* position_update(void *arg) {
 	double dt = data->dt;
 	int thread_index = data->thread_index;
 
+	//Each thread will have their own data segment to calculate on. 
 	int st_index = thread_index * (n_body / N_THREAD);
 	int end_index = 0;
 	if(N_THREAD == (thread_index+1)) {
@@ -136,6 +146,7 @@ void* position_update(void *arg) {
 		end_index = (thread_index + 1) * (n_body / N_THREAD);
 	}
 
+	//Update the position based on the updated velocity value.
 	for(int i = st_index; i < end_index; i ++) {
 		body_array[i].x = body_array[i].x + (body_array[i].velocity_x * dt); 
 		body_array[i].y = body_array[i].y + (body_array[i].velocity_y * dt);
@@ -189,6 +200,7 @@ void step(struct body *body_array, int n_body, double dt, struct data *data) {
 
 	//Performing the velocity function
 	for(int i = 0; i < N_THREAD; i++) {
+		//struct data should be initilized from the main funciton that is calling step function. 
 		pthread_create(threads + i, NULL, velocity_update, data + i);
 	}
 	for(int i = 0; i < N_THREAD; i ++) {
