@@ -12,9 +12,9 @@
 #include <pthread.h>
 #include "nbody.h"
 
-//0.0001 %
+//0.000001 %
 //Change this percentage too see how precist the calculation is. 
-#define DIFF_PERCENTAGE (0.000001)
+#define DIFF_PERCENTAGE (0.00000001)
 
 /**
  * Main function will first of all set up the bodies based on the user's command line input.
