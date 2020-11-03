@@ -21,7 +21,7 @@ performance_test_file:
 	time ./nbody 50000 0.1 -f ./CSV/solar.csv
 
 performance_test_rand:
-	time ./nbody 1000 0.1 -b 400
+	time ./nbody 3000 0.1 -b 100
 
 
 #####################################################
@@ -33,7 +33,7 @@ energy_test2:
 	./test 50000 0.1 -f ./CSV/planets.csv
 
 energy_test3: 
-	./test 50000 0.1 -b 10
+	./test 50000 0.1 -b 20
 
 
 #####################################################

@@ -1,6 +1,5 @@
-#File_name     Single-thread       Two-Thread      Four-Thread
-solar.csv         13.336            21.177          46.132
- 
-
-#TESEST with 50000 values
+#File_name     solar.csv    
+1               13.336               
+2               21.177   
+4               46.132
  
